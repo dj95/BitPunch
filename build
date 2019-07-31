@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+
+dependencies() {
+    export DEBIAN_FRONTEND=noninteractive
+
+    apt update
+
+    apt install -y \
+        build-essential \
+        libtasn1-6 \
+        libtasn1-6-dev
+}
+
+
+create_user() {
+    useradd -m -u 1000 builder
+}
+
+
+build() {
+    pushd /app/lib
+    
+    su builder -c "make"
+
+    popd
+}
+
+
+main() {
+    dependencies    
+
+    create_user
+
+    build
+}
+
+
+set -eo pipefail
+
+main "$@"

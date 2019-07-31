@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+
+main() {
+    docker run --rm -v "$PWD:/app" debian:sid /app/build
+}
+
+set -eo pipefail
+
+main "$@"
