@@ -136,38 +136,54 @@ int BPU_codeInitMathCtx(BPU_T_Math_Ctx ** ctx, const uint16_t m,
 
     if (mod == (BPU_T_GF2_16x) - 1) {
         *ctx = (BPU_T_Math_Ctx *) calloc(1, sizeof(BPU_T_Math_Ctx));
+
         if (!*ctx) {
             BPU_printError("Can not malloc BPU_T_Math_Ctx");
 
             return -1;
         }
+
         (*ctx)->mod_deg = m;
+
+        return rc;
     }
-    else if (mod != 0) {
-        rc = BPU_mathInitCtx(ctx, (BPU_T_GF2_16x) 2, mod);
+
+
+    BPU_T_GF2_16x modulus = NULL;
+
+    switch (m) {
+        case 5:
+            modulus = BPU_GF2_POLY_DEG_5;
+            break;
+        case 6:
+            modulus = BPU_GF2_POLY_DEG_6;
+            break;
+        case 10:
+            modulus = BPU_GF2_POLY_DEG_10;
+            break;
+        case 11:
+            modulus = BPU_GF2_POLY_DEG_11;
+            break;
     }
-    else if (m == 5 && t == 5) {
-        rc = BPU_mathInitCtx(ctx, (BPU_T_GF2_16x) 2,
-                             (BPU_T_GF2_16x) BPU_GF2_POLY_DEG_5);
+
+    if (mod != 0) {
+        modulus = mod;
     }
-    else if (m == 6 && t == 6) {
-        rc = BPU_mathInitCtx(ctx, (BPU_T_GF2_16x) 2,
-                             (BPU_T_GF2_16x) BPU_GF2_POLY_DEG_6);
-    }
-    else if (m == 6 && t == 7) {
-        rc = BPU_mathInitCtx(ctx, (BPU_T_GF2_16x) 2,
-                             (BPU_T_GF2_16x) BPU_GF2_POLY_DEG_6);
-    }
-    else if (m == 11 && t == 50) {
-        rc = BPU_mathInitCtx(ctx, (BPU_T_GF2_16x) 2,
-                             (BPU_T_GF2_16x) BPU_GF2_POLY_DEG_11);
-    }
-    else {
-        BPU_printError
-            ("Code params not supported. Supported only (m,t): (5,5), (6,6), (6,7), (11,50)");
+
+    if (modulus == NULL) {
+        BPU_printError(
+                "Code params not supported. Supported only (m,t): (5,5), (6,6), (6,7), (11,50)"
+        );
 
         return BPU_EC_CODE_PARAMS_NOT_SUPPORTED;
     }
+
+    rc = BPU_mathInitCtx(
+        ctx,
+        (BPU_T_GF2_16x) 2,
+        (BPU_T_GF2_16x) modulus
+    );
+
     return rc;
 }
 
