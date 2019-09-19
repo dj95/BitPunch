@@ -121,7 +121,6 @@ int main(int argc, char **argv) {
             return 0;
         }
 
-
         if (strcmp(argv[i], "-m") == 0) {
             m = atoi(argv[++i]);
         }
@@ -154,6 +153,13 @@ int main(int argc, char **argv) {
     if(testKeyGenEncDec(ctx)) {
         printf("  🔴 KeyGenEncDec failed\n");
     }
+
+    printf(
+        " %dx%d",
+        ctx->code_ctx->code_spec->goppa->g_mat->n,
+        ctx->code_ctx->code_spec->goppa->g_mat->k
+    );
+    BPU_printGf2Mat(ctx->code_ctx->code_spec->goppa->g_mat);
 
     // save the keys if the command line flag is set
     if (save) {

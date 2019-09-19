@@ -24,6 +24,31 @@
 #include <libtasn1.h>
 #include <stdlib.h>
 
+const asn1_static_node ASNMecsPubKey[] = {
+  { "BPU_ASN1", 536875024, NULL },
+  { NULL, 1073741836, NULL },
+  { "MecsPubKey", 536870917, NULL },
+  { "oid", 1073741836, NULL },
+  { "m", 1073741827, NULL },
+  { "t", 1073741827, NULL },
+  { "g_mat", 7, NULL },
+  { NULL, 0, NULL }
+};
+
+const asn1_static_node ASNMecsPriKey[] = {
+  { "BPU_ASN1", 536875024, NULL },
+  { NULL, 1073741836, NULL },
+  { "MecsPriKey", 536870917, NULL },
+  { "oid", 1073741836, NULL },
+  { "m", 1073741827, NULL },
+  { "t", 1073741827, NULL },
+  { "mod", 1073741827, NULL },
+  { "g", 1073741831, NULL },
+  { "p", 1073741831, NULL },
+  { "h_mat", 7, NULL },
+  { NULL, 0, NULL }
+};
+
 int BPU_asn1EncodePriKey(char **buffer, int *size, const BPU_T_Mecs_Ctx * ctx) {
     int rc = 0;
     asn1_node definitions = NULL;
@@ -35,7 +60,7 @@ int BPU_asn1EncodePriKey(char **buffer, int *size, const BPU_T_Mecs_Ctx * ctx) {
 
     *size = 0;
     // TODO: structure cleanup on error
-    rc = asn1_parser2tree(BPU_STR_ASN1_MECS_PRI_KEY, &definitions, error_desc);
+    rc = asn1_array2tree(ASNMecsPriKey, &definitions, error_desc);
 
     if (rc != ASN1_SUCCESS) {
         BPU_printError("ErrorDescription = %s\n\n", error_desc);
@@ -172,7 +197,7 @@ int BPU_asn1DecodePriKey(BPU_T_Mecs_Ctx ** ctx, const char *buffer,
     int i, j;
 
     // TODO:structure cleanup on error
-    rc = asn1_parser2tree(BPU_STR_ASN1_MECS_PRI_KEY, &definitions, error_desc);
+    rc = asn1_array2tree(ASNMecsPriKey, &definitions, error_desc);
 
     if (rc != ASN1_SUCCESS) {
         BPU_printError("ErrorDescription = %s", error_desc);
@@ -294,7 +319,7 @@ int BPU_asn1EncodePubKey(char **buffer, int *size, const BPU_T_Mecs_Ctx * ctx) {
 
     *size = 0;
     // TODO:structure cleanup on error
-    rc = asn1_parser2tree(BPU_STR_ASN1_MECS_PUB_KEY, &definitions, error_desc);
+    rc = asn1_array2tree(ASNMecsPubKey, &definitions, error_desc);
 
     if (rc != ASN1_SUCCESS) {
         BPU_printError("ErrorDescription = %s", error_desc);
@@ -401,7 +426,7 @@ int BPU_asn1DecodePubKey(BPU_T_Mecs_Ctx ** ctx, const char *buffer,
     int i, j, tmp;
 
     // TODO:structure cleanup on error
-    rc = asn1_parser2tree(BPU_STR_ASN1_MECS_PUB_KEY, &definitions, error_desc);
+    rc = asn1_array2tree(ASNMecsPubKey, &definitions, error_desc);
 
     if (rc != ASN1_SUCCESS) {
         BPU_printError("ErrorDescription = %s", error_desc);
